@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Buy and Sell</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+        }
+        .crop-table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        .crop-table th, .crop-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .crop-table th {
+            background-color: #333;
+            color: white;
+        }
+        .crop-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+        .btn-buy {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-sell {
+            background-color: #f44336;
+            color: white;
+        }
+        .output-section {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Crop Buy and Sell</h1>
+    <table class="crop-table">
+        <thead>
+            <tr>
+                <th>Crop Name</th>
+                <th>Seed Price</th>
+                <th>Buy</th>
+                <th>Sell</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Paddy</td>
+                <td>1940</td>
+                <td><button class="btn btn-buy" onclick="buyCrop('Paddy', 1940)">Buy</button></td>
+                <td><button class="btn btn-sell" onclick="sellCrop('Paddy', 1940)">Sell</button></td>
+            </tr>
+            <tr>
+                <td>Jowar</td>
+                <td>2738</td>
+                <td><button class="btn btn-buy" onclick="buyCrop('Jowar', 2738)">Buy</button></td>
+                <td><button class="btn btn-sell" onclick="sellCrop('Jowar', 2738)">Sell</button></td>
+            </tr>
+            <tr>
+                <td>Bajra</td>
+                <td>2250</td>
+                <td><button class="btn btn-buy" onclick="buyCrop('Bajra', 2250)">Buy</button></td>
+                <td><button class="btn btn-sell" onclick="sellCrop('Bajra', 2250)">Sell</button></td>
+            </tr>
+            <tr>
+                <td>Maize</td>
+                <td>1870</td>
+                <td><button class="btn btn-buy" onclick="buyCrop('Maize', 1870)">Buy</button></td>
+                <td><button class="btn btn-sell" onclick="sellCrop('Maize', 1870)">Sell</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="output-section" id="output-section">
+        <h2>Transaction Details</h2>
+        <p id="output-text">No transactions yet.</p>
+    </div>
+
+    <script>
+        let userCrops = {};
+
+        function updateOutput(message) {
+            const outputText = document.getElementById("output-text");
+            outputText.textContent = message;
+        }
+
+        function buyCrop(crop, price) {
+            let quantity = prompt(`How many units of ${crop} would you like to buy? (Price per unit: ${price})`);
+            quantity = parseInt(quantity);
+
+            if (isNaN(quantity) || quantity <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            const totalCost = quantity * price;
+
+            if (userCrops[crop]) {
+                userCrops[crop] += quantity;
+            } else {
+                userCrops[crop] = quantity;
+            }
+
+            const message = `Bought ${quantity} units of ${crop} for a total cost of ${totalCost}.`;
+            alert(message);
+            updateOutput(message);
+        }
+
+        function sellCrop(crop, price) {
+            let quantity = prompt(`How many units of ${crop} would you like to sell? (Price per unit: ${price})`);
+            quantity = parseInt(quantity);
+
+            if (isNaN(quantity) || quantity <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            if (!userCrops[crop] || userCrops[crop] < quantity) {
+                alert("You don't have enough crops to sell.");
+                return;
+            }
+
+            const totalEarnings = quantity * price;
+            userCrops[crop] -= quantity;
+
+            const message = `Sold ${quantity} units of ${crop} for total earnings of ${totalEarnings}.`;
+            alert(message);
+            updateOutput(message);
+        }
+    </script>
+
+</body>
+</html>

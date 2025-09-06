@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registration with Forgot Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .error,
+        .success {
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        p a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+
+        #register-form, #forgot-password-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-form">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <input type="text" id="login-username" placeholder="Enter your username" required>
+            <input type="password" id="login-password" placeholder="Enter your password" required>
+            <p class="error" id="login-error" style="display: none;"></p>
+            <button type="submit">Login</button>
+        </form>
+        <p>
+            Don't have an account? <a href="#" id="show-register">Register here</a><br>
+            Forgot your password? <a href="#" id="show-forgot-password">Reset here</a>
+        </p>
+    </div>
+
+    <div class="container" id="register-form">
+        <h1>Register</h1>
+        <form id="registerForm">
+            <input type="text" id="register-username" placeholder="Enter a username" required>
+            <input type="password" id="register-password" placeholder="Enter a password" required>
+            <p class="error" id="register-error" style="display: none;"></p>
+            <p class="success" id="register-success" style="display: none;"></p>
+            <button type="submit">Register</button>
+        </form>
+        <p>
+            Already have an account? <a href="#" id="show-login">Login here</a>
+        </p>
+    </div>
+
+    <div class="container" id="forgot-password-form">
+        <h1>Forgot Password</h1>
+        <form id="forgotPasswordForm">
+            <input type="text" id="forgot-username" placeholder="Enter your username" required>
+            <p class="error" id="forgot-error" style="display: none;"></p>
+            <p class="success" id="forgot-success" style="display: none;"></p>
+            <button type="submit">Reset Password</button>
+        </form>
+        <p>
+            Remember your password? <a href="#" id="show-login-forgot">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        // Simulated database
+        const users = [];
+
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+
+        const loginError = document.getElementById("login-error");
+        const registerError = document.getElementById("register-error");
+        const registerSuccess = document.getElementById("register-success");
+        const forgotError = document.getElementById("forgot-error");
+        const forgotSuccess = document.getElementById("forgot-success");
+
+        const loginContainer = document.getElementById("login-form");
+        const registerContainer = document.getElementById("register-form");
+        const forgotPasswordContainer = document.getElementById("forgot-password-form");
+
+        const showRegisterLink = document.getElementById("show-register");
+        const showLoginLink = document.getElementById("show-login");
+        const showForgotPasswordLink = document.getElementById("show-forgot-password");
+        const showLoginForgotLink = document.getElementById("show-login-forgot");
+
+        // Switch between forms
+        showRegisterLink.addEventListener("click", () => {
+            loginContainer.style.display = "none";
+            registerContainer.style.display = "block";
+        });
+
+        showLoginLink.addEventListener("click", () => {
+            registerContainer.style.display = "none";
+            loginContainer.style.display = "block";
+        });
+
+        showForgotPasswordLink.addEventListener("click", () => {
+            loginContainer.style.display = "none";
+            forgotPasswordContainer.style.display = "block";
+        });
+
+        showLoginForgotLink.addEventListener("click", () => {
+            forgotPasswordContainer.style.display = "none";
+            loginContainer.style.display = "block";
+        });
+
+        // Login form submission
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const username = document.getElementById("login-username").value;
+            const password = document.getElementById("login-password").value;
+
+            const user = users.find(
+                (user) => user.username === username && user.password === password
+            );
+
+            if (user) {
+                alert("Login successful!");
+                window.location.href = "index.html"; // Redirect to homepage
+            } else {
+                loginError.textContent = "Invalid username or password.";
+                loginError.style.display = "block";
+            }
+        });
+
+        // Register form submission
+        registerForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const username = document.getElementById("register-username").value;
+            const password = document.getElementById("register-password").value;
+
+            const existingUser = users.find((user) => user.username === username);
+
+            if (existingUser) {
+                registerError.textContent = "Username already exists.";
+                registerError.style.display = "block";
+                registerSuccess.style.display = "none";
+            } else {
+                users.push({ username, password });
+                registerSuccess.textContent = "Registration successful! You can now log in.";
+                registerSuccess.style.display = "block";
+                registerError.style.display = "none";
+            }
+        });
+
+        // Forgot password form submission
+        forgotPasswordForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const username = document.getElementById("forgot-username").value;
+
+            const user = users.find((user) => user.username === username);
+
+            if (user) {
+                forgotSuccess.textContent = `Password reset successful! Your new password is: "newpassword123"`;
+                user.password = "newpassword123"; // Reset password
+                forgotSuccess.style.display = "block";
+                forgotError.style.display = "none";
+            } else {
+                forgotError.textContent = "Username not found.";
+                forgotError.style.display = "block";
+                forgotSuccess.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
